@@ -1,15 +1,33 @@
-import { Input } from "../ui/input"
 import { useState } from "react"
-import { Field } from "../ui/field"
-import { Button } from "../ui/button"
+import { SearchRepositories } from "@/api/github"
+import type { TRepo } from "@/types/TRepo"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "../ui/input-group"
 
-export default function SearchBar() {
+export default function SearchBar({
+  setSearchResults,
+}: {
+  setSearchResults: React.Dispatch<React.SetStateAction<TRepo[] | null>>
+}) {
   const [query, setQuery] = useState("")
 
-  const search = () => {
+  const search = async () => {
     if (query.length === 0) return
 
-    console.info("searching with query: ", query)
+    const repos = await SearchRepositories({
+      q: query,
+    })
+
+    if (!repos) {
+      console.error("Could not get results")
+      return
+    }
+
+    setSearchResults(repos)
   }
 
   return (
@@ -19,20 +37,21 @@ export default function SearchBar() {
         search()
       }}
     >
-      <Field>
-        <Input
+      <InputGroup>
+        <InputGroupInput
           type="search"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value)
           }}
+          placeholder="Type to search..."
         />
-      </Field>
-      <Field>
-        <Button className="mt-2" type="submit">
-          Search
-        </Button>
-      </Field>
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton type="submit" variant="secondary">
+            Search
+          </InputGroupButton>
+        </InputGroupAddon>
+      </InputGroup>
     </form>
   )
 }
