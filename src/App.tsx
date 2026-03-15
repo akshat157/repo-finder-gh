@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import SearchBar from "./components/search-bar"
 import type { TSearchResult } from "./types/TSearchResult"
 import { usePagination } from "./hooks/usePagination"
@@ -6,11 +6,13 @@ import ResultsContainer from "./components/results-container"
 import type { TSortReposBy } from "./types/TSortReposBy"
 import { SortBySelect } from "./components/sort-by-select"
 import PaginationControls from "./components/pagination-controls"
+import { SearchRepos } from "./api/github"
 
 export function App() {
   const [searchResult, setSearchResult] = useState<TSearchResult | null>(null)
   const [perPage, setPerPage] = useState(25)
   const [sortBy, setSortBy] = useState<TSortReposBy>(undefined)
+  const [query, setQuery] = useState("")
 
   const repos = searchResult?.repos ?? []
   const totalRepos = searchResult?.totalCount ?? 0
@@ -19,6 +21,27 @@ export function App() {
 
   const { page, setPage, pageRange, isFirstPage, isLastPage, goToPage } =
     usePagination(resultsContainerRef, totalRepos, perPage)
+
+  useEffect(() => {
+    if (!query) return
+
+    async function doSearch() {
+      const result = await SearchRepos({
+        q: query,
+        page,
+        sortBy,
+        perPage,
+      })
+
+      if (!result) {
+        console.error("Could not get results")
+        return
+      }
+
+      setSearchResult(result)
+    }
+    doSearch()
+  }, [query, page, perPage, sortBy])
 
   const handlePerPageChange = (value: number) => {
     setPerPage(value)
@@ -37,10 +60,10 @@ export function App() {
         <div className="bg-background p-4">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
             <SearchBar
-              page={page}
-              sortBy={sortBy}
-              perPage={perPage}
-              setSearchResults={setSearchResult}
+              onSearch={(q) => {
+                setPage(1)
+                setQuery(q)
+              }}
             />
 
             <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">

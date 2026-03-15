@@ -1,57 +1,24 @@
-import { useCallback, useEffect, useState } from "react"
-import { SearchRepos } from "@/api/github"
-import type { TSearchResult } from "@/types/TSearchResult"
 import { Field } from "./ui/field"
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
-import type { TSortReposBy } from "@/types/TSortReposBy"
+import { useState } from "react"
 
 export default function SearchBar({
-  page,
-  perPage,
-  sortBy,
-  setSearchResults,
+  onSearch,
 }: {
-  page: number
-  perPage: number
-  sortBy: TSortReposBy
-  setSearchResults: React.Dispatch<React.SetStateAction<TSearchResult | null>>
+  onSearch: (query: string) => void
 }) {
   const [inputValue, setInputValue] = useState("")
-  const [query, setQuery] = useState("")
-
-  const search = useCallback(async () => {
-    if (!query) return
-
-    const result = await SearchRepos({
-      q: query,
-      page,
-      sortBy,
-      perPage,
-    })
-
-    if (!result) {
-      console.error("Could not get results")
-      return
-    }
-
-    setSearchResults(result)
-  }, [query, page, perPage, sortBy, setSearchResults])
-
-  // Run search ONLY when page or query changes
-  useEffect(() => {
-    search()
-  }, [page, query, search])
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault()
 
-        if (!inputValue.trim()) return
+        const q = inputValue.trim()
+        if (!q) return
 
-        // Reset page externally if needed
-        setQuery(inputValue.trim())
+        onSearch(q)
       }}
     >
       <Field orientation="horizontal">
