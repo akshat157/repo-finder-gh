@@ -3,14 +3,11 @@ import SearchBar from "./components/search-bar"
 import { usePagination } from "./hooks/usePagination"
 import ResultsContainer from "./components/results-container"
 import type { TSortReposBy } from "./types/TSortReposBy"
-import { SortBySelect } from "./components/sort-by-select"
 import PaginationControls from "./components/pagination-controls"
 import { useRepoSearch } from "./hooks/useRepoSearch"
 import { Spinner } from "./components/ui/spinner"
-import { LanguageFilter } from "./components/language-filter"
-import OrderSelect from "./components/order-select"
-import StarCountFilter from "./components/star-count-filter"
 import { buildSearchQuery } from "./lib/search-query-builder"
+import SearchFilters from "./components/search-filters"
 
 export function App() {
   const [query, setQuery] = useState("")
@@ -68,24 +65,24 @@ export function App() {
       </header>
 
       <main className="mx-auto flex min-w-lg flex-1 flex-col overflow-hidden md:min-w-4xl lg:min-w-6xl xl:mx-20 xl:min-w-7xl">
-        <div className="border-b p-4">
-          <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
-            <SearchBar
-              onSearch={(q) => {
-                setPage(1)
-                setQuery(q)
-              }}
-            />
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 border-b p-4">
+          <SearchBar
+            onSearch={(q) => {
+              setPage(1)
+              setQuery(q)
+            }}
+          />
 
-            <div className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <div className="flex gap-3">
-                <SortBySelect value={sortBy} onChange={setSortBy} />
-                <OrderSelect value={sortOrder} onChange={setSortOrder} />
-              </div>
-              <LanguageFilter value={languages} onChange={setLanguages} />
-              <StarCountFilter value={minStars} onChange={setMinStars} />
-            </div>
-          </div>
+          <SearchFilters
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            languages={languages}
+            minStars={minStars}
+            onSortByChange={setSortBy}
+            onSortOrderChange={setSortOrder}
+            onLanguagesChange={setLanguages}
+            onMinStarCountChange={setMinStars}
+          />
         </div>
         {hasSearched && !isLoading && repos.length === 0 && (
           <div className="flex h-full items-center justify-center py-16 text-center text-muted-foreground">
