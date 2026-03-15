@@ -45,6 +45,9 @@ export function App() {
 
   const hasSearched = !!query
 
+  const resStart = (page - 1) * perPage + 1
+  const resEnd = Math.min(page * perPage, totalRepos)
+
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="border-b px-4 py-2">
@@ -53,7 +56,7 @@ export function App() {
         </div>
       </header>
 
-      <main className="mx-auto flex min-w-lg flex-1 flex-col overflow-hidden lg:max-w-7xl md:lg:min-w-4xl">
+      <main className="mx-auto flex min-w-lg flex-1 flex-col overflow-hidden md:min-w-4xl lg:min-w-6xl xl:mx-20 xl:min-w-7xl">
         <div className="border-b p-4">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
             <SearchBar
@@ -96,9 +99,8 @@ export function App() {
                 <div className="px-4 py-2 text-sm">
                   Found{" "}
                   <span className="font-bold text-primary">{totalRepos}</span>{" "}
-                  repositories for <span className="text-primary">{query}</span>
-                  . Showing {(page - 1) * perPage + 1} - {page * perPage} of the
-                  first 1000 repositories.
+                  repositories for <span>"{query}"</span>. Showing {resStart} -{" "}
+                  {resEnd} of the first 1000 repositories.
                 </div>
 
                 <ResultsContainer ref={resultsContainerRef} items={repos} />
