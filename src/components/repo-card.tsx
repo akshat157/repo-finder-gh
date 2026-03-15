@@ -1,4 +1,4 @@
-import { Star } from "lucide-react"
+import { GitFork, Star } from "lucide-react"
 import {
   Card,
   CardContent,
@@ -19,16 +19,18 @@ export default function RepoCard({ repo }: { repo: TRepo }) {
   return (
     <Card className="h-full transition-shadow hover:shadow-xl">
       <CardHeader>
-        <CardTitle className="font-medium hover:underline">
+        <CardTitle className="line-clamp-1 font-medium hover:underline">
           <a href={repo.url} target="_blank">
             <span>{repo.owner}</span>/
             <span className="font-bold">{repo.name}</span>
           </a>
         </CardTitle>
-        <CardDescription>{repo.description}</CardDescription>
+        <CardDescription className="line-clamp-3">
+          {repo.description}
+        </CardDescription>
       </CardHeader>
-      <CardContent className="h-full">
-        <div className="my-2 flex flex-wrap gap-2">
+      <CardContent>
+        <div className="mt-2 flex gap-2 overflow-x-auto pb-5 whitespace-nowrap">
           {badges.map(
             (badge, i) =>
               badge && (
@@ -42,10 +44,14 @@ export default function RepoCard({ repo }: { repo: TRepo }) {
           )}
         </div>
       </CardContent>
-      <CardFooter>
-        <div className="flex items-center gap-2">
+      <CardFooter className="flex gap-4">
+        <div className="flex items-center gap-1 rounded-2xl px-2 outline">
           <Star size={16} />
           <span className="text-lg font-medium">{repo.stars}</span>
+        </div>
+        <div className="flex items-center gap-1 rounded-2xl px-2 outline">
+          <GitFork size={16} />
+          <span className="text-lg font-medium">{repo.forks}</span>
         </div>
       </CardFooter>
     </Card>
