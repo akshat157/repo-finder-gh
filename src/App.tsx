@@ -1,52 +1,46 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import SearchBar from "./components/search-bar"
-import type { TSearchResult } from "./types/TSearchResult"
 import { usePagination } from "./hooks/usePagination"
 import ResultsContainer from "./components/results-container"
 import type { TSortReposBy } from "./types/TSortReposBy"
 import { SortBySelect } from "./components/sort-by-select"
 import PaginationControls from "./components/pagination-controls"
-import { SearchRepos } from "./api/github"
+import { useRepoSearch } from "./hooks/useRepoSearch"
 
 export function App() {
-  const [searchResult, setSearchResult] = useState<TSearchResult | null>(null)
+  const [query, setQuery] = useState("")
+  const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(25)
   const [sortBy, setSortBy] = useState<TSortReposBy>(undefined)
-  const [query, setQuery] = useState("")
-
-  const repos = searchResult?.repos ?? []
-  const totalRepos = searchResult?.totalCount ?? 0
 
   const resultsContainerRef = useRef<HTMLDivElement | null>(null)
 
-  const { page, setPage, pageRange, isFirstPage, isLastPage, goToPage } =
-    usePagination(resultsContainerRef, totalRepos, perPage)
-
-  useEffect(() => {
-    if (!query) return
-
-    async function doSearch() {
-      const result = await SearchRepos({
-        q: query,
-        page,
-        sortBy,
-        perPage,
-      })
-
-      if (!result) {
-        console.error("Could not get results")
-        return
-      }
-
-      setSearchResult(result)
-    }
-    doSearch()
-  }, [query, page, perPage, sortBy])
+  const handlePageChange = (value: number) => {
+    setPage(value)
+  }
 
   const handlePerPageChange = (value: number) => {
     setPerPage(value)
     setPage(1)
   }
+
+  const { data } = useRepoSearch({
+    query,
+    sortBy,
+    page,
+    perPage,
+  })
+
+  const repos = data?.repos ?? []
+  const totalRepos = data?.totalCount ?? 0
+
+  const { pageRange, isFirstPage, isLastPage, goToPage } = usePagination({
+    page,
+    onPageChange: handlePageChange,
+    perPage,
+    totalItems: totalRepos,
+    resultsContainerRef,
+  })
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
@@ -72,22 +66,24 @@ export function App() {
           </div>
         </div>
 
-        <div className="px-4 py-2 text-sm">
-          Found <span className="font-bold text-primary">{totalRepos}</span>{" "}
-          repositories. Showing {(page - 1) * perPage + 1} - {page * perPage} of
-          the first thousand repositories.
-        </div>
+        <div className="h-180">
+          <div className="px-4 py-2 text-sm">
+            Found <span className="font-bold text-primary">{totalRepos}</span>{" "}
+            repositories. Showing {(page - 1) * perPage + 1} - {page * perPage}{" "}
+            of the first thousand repositories.
+          </div>
 
-        <ResultsContainer ref={resultsContainerRef} items={repos} />
-        <PaginationControls
-          page={page}
-          perPage={perPage}
-          isFirstPage={isFirstPage}
-          isLastPage={isLastPage}
-          pageRange={pageRange}
-          goToPage={goToPage}
-          onPerPageChange={handlePerPageChange}
-        />
+          <ResultsContainer ref={resultsContainerRef} items={repos} />
+          <PaginationControls
+            page={page}
+            perPage={perPage}
+            isFirstPage={isFirstPage}
+            isLastPage={isLastPage}
+            pageRange={pageRange}
+            goToPage={goToPage}
+            onPerPageChange={handlePerPageChange}
+          />
+        </div>
       </main>
     </div>
   )

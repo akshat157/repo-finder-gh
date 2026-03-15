@@ -1,13 +1,19 @@
 import { getPageRange, getTotalPages } from "@/lib/pagination"
-import { useMemo, useState, type RefObject } from "react"
+import { useMemo, type RefObject } from "react"
 
-export function usePagination(
-  resultsContainerRef: RefObject<HTMLDivElement | null>,
-  totalItems: number,
+export function usePagination({
+  page,
+  onPageChange,
+  perPage,
+  totalItems,
+  resultsContainerRef,
+}: {
+  page: number
+  onPageChange: (p: number) => void
   perPage: number
-) {
-  const [page, setPage] = useState(1)
-
+  totalItems: number
+  resultsContainerRef: RefObject<HTMLDivElement | null>
+}) {
   const totalPages = useMemo(
     () => getTotalPages(totalItems, perPage),
     [totalItems, perPage]
@@ -23,14 +29,12 @@ export function usePagination(
 
   const goToPage = (p: number) => {
     if (p >= 1 && p <= totalPages) {
-      setPage(p)
+      onPageChange(p)
       resultsContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" })
     }
   }
 
   return {
-    page,
-    setPage,
     totalPages,
     pageRange,
     isFirstPage,
