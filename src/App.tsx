@@ -1,20 +1,11 @@
 import { useRef, useState } from "react"
 import SearchBar from "./components/search-bar"
 import type { TSearchResult } from "./types/TSearchResult"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "./components/ui/pagination"
 import { usePagination } from "./hooks/usePagination"
 import ResultsContainer from "./components/results-container"
 import type { TSortReposBy } from "./types/TSortReposBy"
 import { SortBySelect } from "./components/sort-by-select"
-import { PerPageSelect } from "./components/per-page-select"
+import PaginationControls from "./components/pagination-controls"
 
 export function App() {
   const [searchResult, setSearchResult] = useState<TSearchResult | null>(null)
@@ -65,60 +56,15 @@ export function App() {
         </div>
 
         <ResultsContainer ref={resultsContainerRef} items={repos} />
-        <div className="flex items-center justify-between bg-background px-4 py-4">
-          <PerPageSelect value={perPage} onChange={handlePerPageChange} />
-
-          {/* Pagination */}
-          <Pagination className="flex justify-end">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href=""
-                  className={
-                    isFirstPage ? "pointer-events-none opacity-50" : ""
-                  }
-                  onClick={(e) => {
-                    e.preventDefault()
-                    if (!isFirstPage) goToPage(page - 1)
-                  }}
-                />
-              </PaginationItem>
-
-              {pageRange.map((p, i) =>
-                p === "..." ? (
-                  <PaginationItem key={`ellipsis-${i}`}>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                ) : (
-                  <PaginationItem key={p}>
-                    <PaginationLink
-                      className="w-full px-4"
-                      href=""
-                      isActive={p === page}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        goToPage(p)
-                      }}
-                    >
-                      {p}
-                    </PaginationLink>
-                  </PaginationItem>
-                )
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  href=""
-                  className={isLastPage ? "pointer-events-none opacity-50" : ""}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    if (!isLastPage) goToPage(page + 1)
-                  }}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <PaginationControls
+          page={page}
+          perPage={perPage}
+          isFirstPage={isFirstPage}
+          isLastPage={isLastPage}
+          pageRange={pageRange}
+          goToPage={goToPage}
+          onPerPageChange={handlePerPageChange}
+        />
       </main>
     </div>
   )
