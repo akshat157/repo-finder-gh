@@ -42,6 +42,8 @@ export function App() {
     resultsContainerRef,
   })
 
+  const hasSearched = !!query
+
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <header className="border-b px-4 py-2">
@@ -51,7 +53,7 @@ export function App() {
       </header>
 
       <main className="mx-auto flex min-w-lg flex-1 flex-col overflow-hidden lg:max-w-7xl md:lg:min-w-4xl">
-        <div className="bg-background p-4">
+        <div className="border-b p-4">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
             <SearchBar
               onSearch={(q) => {
@@ -65,26 +67,38 @@ export function App() {
             </div>
           </div>
         </div>
-
-        <div className="flex h-200 flex-col">
-          <div className="px-4 py-2 text-sm">
-            Found <span className="font-bold text-primary">{totalRepos}</span>{" "}
-            repositories for <span className="text-primary">{query}</span>.
-            Showing {(page - 1) * perPage + 1} - {page * perPage} of the first
-            1000 repositories.
+        {!hasSearched && (
+          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+            <div className="text-lg font-semibold">
+              GitHub Repository Finder
+            </div>
+            <div className="text-sm">
+              Enter a search term like repository name, owner or partial
+              description text to begin.
+            </div>
           </div>
+        )}
+        {hasSearched && (
+          <div className="flex h-200 flex-col">
+            <div className="px-4 py-2 text-sm">
+              Found <span className="font-bold text-primary">{totalRepos}</span>{" "}
+              repositories for <span className="text-primary">{query}</span>.
+              Showing {(page - 1) * perPage + 1} - {page * perPage} of the first
+              1000 repositories.
+            </div>
 
-          <ResultsContainer ref={resultsContainerRef} items={repos} />
-          <PaginationControls
-            page={page}
-            perPage={perPage}
-            isFirstPage={isFirstPage}
-            isLastPage={isLastPage}
-            pageRange={pageRange}
-            goToPage={goToPage}
-            onPerPageChange={handlePerPageChange}
-          />
-        </div>
+            <ResultsContainer ref={resultsContainerRef} items={repos} />
+            <PaginationControls
+              page={page}
+              perPage={perPage}
+              isFirstPage={isFirstPage}
+              isLastPage={isLastPage}
+              pageRange={pageRange}
+              goToPage={goToPage}
+              onPerPageChange={handlePerPageChange}
+            />
+          </div>
+        )}
       </main>
     </div>
   )
