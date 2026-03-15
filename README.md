@@ -47,7 +47,9 @@ npm install
 npm run dev
 ```
 
-Open in your browser.
+#### Open in your browser.
+
+Open http://localhost:5173 in your browser.
 
 # Notes
 
