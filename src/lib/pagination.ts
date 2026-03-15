@@ -9,29 +9,46 @@ export const getTotalPages = (
   return Math.ceil(capped / perPage)
 }
 
-export const getPageRange = (current: number, total: number, delta = 2) => {
-  const range: (number | "...")[] = []
+export const getPageRange = (
+  current: number,
+  total: number,
+  maxItems = 7
+): (number | "...")[] => {
+  if (total <= maxItems) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
 
-  const start = Math.max(2, current - delta)
-  const end = Math.min(total - 1, current + delta)
+  const pages: (number | "...")[] = []
 
-  range.push(1)
+  const midItemsCount = maxItems - 2
+  let start = current - Math.floor(midItemsCount / 2)
+  let end = current + Math.floor(midItemsCount / 2)
+
+  if (start < 2) {
+    start = 2
+    end = start + midItemsCount - 1
+  }
+
+  if (end > total - 1) {
+    end = total - 1
+    start = end - midItemsCount + 1
+  }
+
+  pages.push(1)
 
   if (start > 2) {
-    range.push("...")
+    pages.push("...")
   }
 
   for (let i = start; i <= end; i++) {
-    range.push(i)
+    pages.push(i)
   }
 
   if (end < total - 1) {
-    range.push("...")
+    pages.push("...")
   }
 
-  if (total > 1) {
-    range.push(total)
-  }
+  pages.push(total)
 
-  return range
+  return pages
 }

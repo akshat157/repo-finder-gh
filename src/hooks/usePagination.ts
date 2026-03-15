@@ -20,7 +20,7 @@ export function usePagination({
   )
 
   const pageRange = useMemo(
-    () => getPageRange(page, totalPages),
+    () => getPageRange(page, totalPages, 7),
     [page, totalPages]
   )
 
