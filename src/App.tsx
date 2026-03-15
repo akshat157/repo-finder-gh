@@ -7,13 +7,19 @@ import { SortBySelect } from "./components/sort-by-select"
 import PaginationControls from "./components/pagination-controls"
 import { useRepoSearch } from "./hooks/useRepoSearch"
 import { Spinner } from "./components/ui/spinner"
+import { LanguageFilter } from "./components/language-filter"
+import OrderSelect from "./components/order-select"
+import StarCountFilter from "./components/star-count-filter"
+import { buildSearchQuery } from "./lib/search-query-builder"
 
 export function App() {
   const [query, setQuery] = useState("")
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(25)
   const [sortBy, setSortBy] = useState<TSortReposBy>(undefined)
-
+  const [minStars, setMinStars] = useState(0)
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+  const [languages, setLanguages] = useState<string[]>([])
   const resultsContainerRef = useRef<HTMLDivElement | null>(null)
 
   const handlePageChange = (value: number) => {
@@ -25,10 +31,15 @@ export function App() {
     setPage(1)
   }
 
+  const queryWithFilters = buildSearchQuery(query, languages, minStars)
+
   const { data, isLoading } = useRepoSearch({
-    query,
+    q: queryWithFilters,
     sortBy,
+    order: sortOrder,
     page,
+    minStars,
+    languages,
     perPage,
   })
 
@@ -66,8 +77,13 @@ export function App() {
               }}
             />
 
-            <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-              <SortBySelect value={sortBy} onChange={setSortBy} />
+            <div className="flex flex-col gap-3 text-sm text-muted-foreground">
+              <div className="flex gap-3">
+                <SortBySelect value={sortBy} onChange={setSortBy} />
+                <OrderSelect value={sortOrder} onChange={setSortOrder} />
+              </div>
+              <LanguageFilter value={languages} onChange={setLanguages} />
+              <StarCountFilter value={minStars} onChange={setMinStars} />
             </div>
           </div>
         </div>

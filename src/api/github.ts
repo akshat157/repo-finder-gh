@@ -8,11 +8,13 @@ const octokit = new Octokit()
 export async function SearchRepos({
   q,
   sortBy,
+  order,
   page = 1,
   perPage = 10,
 }: {
   q: string
   sortBy?: TSortReposBy
+  order: "asc" | "desc"
   page: number
   perPage: number
 }): Promise<TSearchResult | null> {
@@ -20,6 +22,7 @@ export async function SearchRepos({
     const result = await octokit.rest.search.repos({
       q,
       sort: sortBy,
+      order: order,
       page,
       per_page: perPage,
     })

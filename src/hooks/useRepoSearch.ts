@@ -3,28 +3,35 @@ import { SearchRepos } from "@/api/github"
 import type { TSortReposBy } from "@/types/TSortReposBy"
 
 export function useRepoSearch({
-  query,
+  q,
   sortBy,
+  order,
   page,
+  minStars,
+  languages,
   perPage,
 }: {
-  query: string
+  q: string
   sortBy?: TSortReposBy
+  order: "asc" | "desc"
   page: number
+  minStars: number
+  languages: string[]
   perPage: number
 }) {
   return useQuery({
-    queryKey: ["repos", query, sortBy, page, perPage],
+    queryKey: ["repos", q, sortBy, order, languages, minStars, page, perPage],
 
     queryFn: () =>
       SearchRepos({
-        q: query,
+        q,
         sortBy,
+        order,
         page,
         perPage,
       }),
 
-    enabled: !!query,
+    enabled: !!q,
     staleTime: 60 * 5 * 1000,
     placeholderData: keepPreviousData,
   })
