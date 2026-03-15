@@ -1,12 +1,29 @@
-export const languages = [
+const languageList = [
   "JavaScript",
   "TypeScript",
   "Python",
   "Go",
   "Rust",
   "Java",
-  "C++",
+  "Kotlin",
+  "Scala",
   "C",
-  "Zig",
+  "C++",
+  "C#",
+  "Dart",
+  "Swift",
+  "Objective-C",
+  "PHP",
+  "Ruby",
+  "Elixir",
+  "Haskell",
+  "Lua",
   "Shell",
-] as const
+  "PowerShell",
+  "Zig",
+  "Nim",
+  "Julia",
+  "R",
+]
+
+export const languages = [...languageList].sort()
