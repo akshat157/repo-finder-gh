@@ -66,11 +66,12 @@ export function App() {
           </div>
         </div>
 
-        <div className="h-180">
+        <div className="flex h-200 flex-col">
           <div className="px-4 py-2 text-sm">
             Found <span className="font-bold text-primary">{totalRepos}</span>{" "}
-            repositories. Showing {(page - 1) * perPage + 1} - {page * perPage}{" "}
-            of the first thousand repositories.
+            repositories for <span className="text-primary">{query}</span>.
+            Showing {(page - 1) * perPage + 1} - {page * perPage} of the first
+            1000 repositories.
           </div>
 
           <ResultsContainer ref={resultsContainerRef} items={repos} />
