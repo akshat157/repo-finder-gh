@@ -7,4 +7,5 @@ export type TRepo = {
   description: string | null
   topics: string[]
   language: string
+  forks: number
 }

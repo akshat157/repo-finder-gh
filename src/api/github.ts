@@ -37,6 +37,7 @@ export async function SearchRepos({
           description: item.description || null,
           topics: item.topics,
           language: item.language,
+          forks: item.forks,
         }) as TRepo
     )
 
