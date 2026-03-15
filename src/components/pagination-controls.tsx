@@ -37,7 +37,7 @@ export function PaginationControls({
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              href=""
+              href="#"
               className={isFirstPage ? "pointer-events-none opacity-50" : ""}
               onClick={(e) => {
                 e.preventDefault()
@@ -55,7 +55,7 @@ export function PaginationControls({
               <PaginationItem key={p}>
                 <PaginationLink
                   className="w-full px-4"
-                  href=""
+                  href="#"
                   isActive={p === page}
                   onClick={(e) => {
                     e.preventDefault()
@@ -70,7 +70,7 @@ export function PaginationControls({
 
           <PaginationItem>
             <PaginationNext
-              href=""
+              href="#"
               className={isLastPage ? "pointer-events-none opacity-50" : ""}
               onClick={(e) => {
                 e.preventDefault()
