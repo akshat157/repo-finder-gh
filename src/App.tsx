@@ -1,10 +1,38 @@
-import { useState } from "react"
-import SearchBar from "./components/search/search-bar"
-import type { TRepo } from "./types/TRepo"
-import { Card, CardContent, CardTitle } from "./components/ui/card"
+import { useRef, useState } from "react"
+import SearchBar from "./components/search-bar"
+import type { TSearchResult } from "./types/TSearchResult"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./components/ui/pagination"
+import { usePagination } from "./hooks/usePagination"
+import ResultsContainer from "./components/results-container"
+import type { TSortReposBy } from "./types/TSortReposBy"
+import { SortBySelect } from "./components/sort-by-select"
+import { PerPageSelect } from "./components/per-page-select"
 
 export function App() {
-  const [searchResults, setSearchResults] = useState<TRepo[] | null>(null)
+  const [searchResult, setSearchResult] = useState<TSearchResult | null>(null)
+  const [perPage, setPerPage] = useState(25)
+  const [sortBy, setSortBy] = useState<TSortReposBy>(undefined)
+
+  const repos = searchResult?.repos ?? []
+  const totalRepos = searchResult?.totalCount ?? 0
+
+  const resultsContainerRef = useRef<HTMLDivElement | null>(null)
+
+  const { page, setPage, pageRange, isFirstPage, isLastPage, goToPage } =
+    usePagination(resultsContainerRef, totalRepos, perPage)
+
+  const handlePerPageChange = (value: number) => {
+    setPerPage(value)
+    setPage(1)
+  }
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
@@ -14,13 +42,18 @@ export function App() {
         </div>
       </header>
 
-      <main className="flex flex-1 flex-col overflow-hidden">
-        <div className="border-b bg-background p-4">
+      <main className="mx-auto flex min-w-lg flex-1 flex-col overflow-hidden lg:max-w-7xl md:lg:min-w-4xl">
+        <div className="bg-background p-4">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
-            <SearchBar setSearchResults={setSearchResults} />
+            <SearchBar
+              page={page}
+              sortBy={sortBy}
+              perPage={perPage}
+              setSearchResults={setSearchResult}
+            />
 
             <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-              filters will go here
+              <SortBySelect value={sortBy} onChange={setSortBy} />
             </div>
           </div>
         </div>
