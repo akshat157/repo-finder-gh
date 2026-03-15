@@ -25,23 +25,66 @@ export function App() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
-            {searchResults?.map((repo) => (
-              <a key={repo.name + repo.owner} href={repo.url} target="_blank">
-                <Card className="transition-shadow hover:shadow-xl">
-                  <CardTitle className="px-4 pt-4">
-                    Repo name: {repo.name}
-                  </CardTitle>
+        <div className="px-4 py-2 text-sm">
+          Found <span className="font-bold text-primary">{totalRepos}</span>{" "}
+          repositories. Showing {(page - 1) * perPage + 1} - {page * perPage} of
+          the first thousand repositories.
+        </div>
 
-                  <CardContent className="flex flex-col gap-2">
-                    <span>Repo owner: {repo.owner}</span>
-                    <span>Repo stars: {repo.stars}</span>
-                  </CardContent>
-                </Card>
-              </a>
-            ))}
-          </div>
+        <ResultsContainer ref={resultsContainerRef} items={repos} />
+        <div className="flex items-center justify-between bg-background px-4 py-4">
+          <PerPageSelect value={perPage} onChange={handlePerPageChange} />
+
+          {/* Pagination */}
+          <Pagination className="flex justify-end">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href=""
+                  className={
+                    isFirstPage ? "pointer-events-none opacity-50" : ""
+                  }
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (!isFirstPage) goToPage(page - 1)
+                  }}
+                />
+              </PaginationItem>
+
+              {pageRange.map((p, i) =>
+                p === "..." ? (
+                  <PaginationItem key={`ellipsis-${i}`}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={p}>
+                    <PaginationLink
+                      className="w-full px-4"
+                      href=""
+                      isActive={p === page}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        goToPage(p)
+                      }}
+                    >
+                      {p}
+                    </PaginationLink>
+                  </PaginationItem>
+                )
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  href=""
+                  className={isLastPage ? "pointer-events-none opacity-50" : ""}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    if (!isLastPage) goToPage(page + 1)
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </main>
     </div>
