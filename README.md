@@ -4,7 +4,7 @@ A simple web app for searching GitHub repositories with sorting, filtering, and 
 
 I created this project as an exercise to checkout the GitHub Rest API, particularly the Search API and to practice some React UI concepts like pagination, sorting and filtering, especially in the case where these operations are server-sided.
 
-A preview of the application has been deployed at https://akshatmalviya.com/repo-finder-gh
+A preview of the application has been deployed at https://akshatmalviya.com/projects/repo-finder-gh
 
 **Note: Please be aware of the GitHub API rate limits. You may try to refresh the page and try again, or wait for at least 10 minutes before trying again.**
 
