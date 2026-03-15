@@ -121,7 +121,7 @@ export function App() {
                   Found{" "}
                   <span className="font-bold text-primary">{totalRepos}</span>{" "}
                   repositories for <span>"{query}"</span>. Showing {resStart} -{" "}
-                  {resEnd} of the first 1000 repositories.
+                  {resEnd}.
                 </div>
 
                 <ResultsContainer ref={resultsContainerRef} items={repos} />
