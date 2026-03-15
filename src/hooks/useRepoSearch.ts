@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { SearchRepos } from "@/api/github"
 import type { TSortReposBy } from "@/types/TSortReposBy"
 
@@ -26,5 +26,6 @@ export function useRepoSearch({
 
     enabled: !!query,
     staleTime: 60 * 5 * 1000,
+    placeholderData: keepPreviousData,
   })
 }
