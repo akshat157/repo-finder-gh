@@ -12,7 +12,7 @@ export function ResultsContainer({
   return (
     <div
       ref={ref}
-      className="h-full overflow-y-auto rounded-2xl border bg-accent"
+      className="md:lg-0 mx-4 min-h-0 flex-1 overflow-y-auto rounded-2xl border bg-accent"
     >
       <div className="grid w-full flex-1 grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {items.map((repo) => (

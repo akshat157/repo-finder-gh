@@ -6,6 +6,7 @@ import type { TSortReposBy } from "./types/TSortReposBy"
 import { SortBySelect } from "./components/sort-by-select"
 import PaginationControls from "./components/pagination-controls"
 import { useRepoSearch } from "./hooks/useRepoSearch"
+import { Spinner } from "./components/ui/spinner"
 
 export function App() {
   const [query, setQuery] = useState("")
@@ -24,7 +25,7 @@ export function App() {
     setPage(1)
   }
 
-  const { data } = useRepoSearch({
+  const { data, isLoading } = useRepoSearch({
     query,
     sortBy,
     page,
@@ -67,8 +68,13 @@ export function App() {
             </div>
           </div>
         </div>
+        {hasSearched && !isLoading && repos.length === 0 && (
+          <div className="flex h-full items-center justify-center py-16 text-center text-muted-foreground">
+            No repositories found for "{query}"
+          </div>
+        )}
         {!hasSearched && (
-          <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
+          <div className="flex h-full flex-col items-center justify-center py-24 text-muted-foreground">
             <div className="text-lg font-semibold">
               GitHub Repository Finder
             </div>
@@ -79,25 +85,35 @@ export function App() {
           </div>
         )}
         {hasSearched && (
-          <div className="flex h-200 flex-col">
-            <div className="px-4 py-2 text-sm">
-              Found <span className="font-bold text-primary">{totalRepos}</span>{" "}
-              repositories for <span className="text-primary">{query}</span>.
-              Showing {(page - 1) * perPage + 1} - {page * perPage} of the first
-              1000 repositories.
-            </div>
+          <>
+            {isLoading && (
+              <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                <Spinner className="size-8" role="" />
+              </div>
+            )}
+            {!isLoading && repos.length !== 0 && (
+              <div className="flex min-h-0 flex-1 flex-col">
+                <div className="px-4 py-2 text-sm">
+                  Found{" "}
+                  <span className="font-bold text-primary">{totalRepos}</span>{" "}
+                  repositories for <span className="text-primary">{query}</span>
+                  . Showing {(page - 1) * perPage + 1} - {page * perPage} of the
+                  first 1000 repositories.
+                </div>
 
-            <ResultsContainer ref={resultsContainerRef} items={repos} />
-            <PaginationControls
-              page={page}
-              perPage={perPage}
-              isFirstPage={isFirstPage}
-              isLastPage={isLastPage}
-              pageRange={pageRange}
-              goToPage={goToPage}
-              onPerPageChange={handlePerPageChange}
-            />
-          </div>
+                <ResultsContainer ref={resultsContainerRef} items={repos} />
+                <PaginationControls
+                  page={page}
+                  perPage={perPage}
+                  isFirstPage={isFirstPage}
+                  isLastPage={isLastPage}
+                  pageRange={pageRange}
+                  goToPage={goToPage}
+                  onPerPageChange={handlePerPageChange}
+                />
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>

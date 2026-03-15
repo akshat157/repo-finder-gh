@@ -29,7 +29,7 @@ export function PaginationControls({
   onPerPageChange,
 }: PaginationControlsProps) {
   return (
-    <div className="flex items-center justify-between bg-background px-4 py-4">
+    <div className="flex items-center justify-between px-4 py-4">
       <PerPageSelect value={perPage} onChange={onPerPageChange} />
 
       {/* Pagination */}
