@@ -1,5 +1,7 @@
 {
   "name": "repo-search-gh",
+  "description": "A simple web app for searching GitHub repositories with sorting, filtering, and pagination.",
+  "author": "Akshat Malviya <contact@akshatmalviya.com>",
   "private": true,
   "version": "0.0.1",
   "type": "module",
