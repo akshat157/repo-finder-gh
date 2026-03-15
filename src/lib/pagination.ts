@@ -6,7 +6,7 @@ export const getTotalPages = (
   // NOTE: GitHub has a cap of 1000 items per search so the
   // per page count should be capped.
   const capped = Math.min(total, apiCap)
-  return Math.ceil(capped / perPage)
+  return Math.max(1, Math.ceil(capped / perPage))
 }
 
 export const getPageRange = (
