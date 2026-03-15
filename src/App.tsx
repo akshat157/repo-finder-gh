@@ -30,7 +30,7 @@ export function App() {
 
   const queryWithFilters = buildSearchQuery(query, languages, minStars)
 
-  const { data, isLoading } = useRepoSearch({
+  const { data, isLoading, isFetching } = useRepoSearch({
     q: queryWithFilters,
     sortBy,
     order: sortOrder,
@@ -104,11 +104,19 @@ export function App() {
           <>
             {isLoading && (
               <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                <Spinner className="size-8" role="" />
+                <Spinner className="size-8" />
               </div>
             )}
             {!isLoading && repos.length !== 0 && (
               <div className="flex min-h-0 flex-1 flex-col">
+                {isFetching && (
+                  <div className="absolute inset-0 z-50 flex items-center justify-center rounded-2xl bg-background/80 backdrop-blur-sm">
+                    <div className="animate-pulse text-sm text-muted-foreground">
+                      <Spinner className="size-8" />
+                    </div>
+                  </div>
+                )}
+
                 <div className="px-4 py-2 text-sm">
                   Found{" "}
                   <span className="font-bold text-primary">{totalRepos}</span>{" "}
