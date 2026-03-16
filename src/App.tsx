@@ -108,7 +108,7 @@ export function App() {
               </div>
             )}
             {!isLoading && repos.length !== 0 && (
-              <div className="flex min-h-0 flex-1 flex-col">
+              <div className="relative flex min-h-0 flex-1 flex-col">
                 {isFetching && (
                   <div className="absolute inset-0 z-50 flex items-center justify-center rounded-2xl bg-background/80 backdrop-blur-sm">
                     <div className="animate-pulse text-sm text-muted-foreground">
